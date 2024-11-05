@@ -4,3 +4,29 @@
   padding: 2rem;
   text-align: center;
 }
+
+.to-do-item-list {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.list-item {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  border-width: 0.5px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+}
+
+.create-item-button {
+  background-color: transparent;
+  color: green;
+}
+.cancel-item-button {
+  background-color: transparent;
+  color: red;
+}

@@ -1,16 +1,19 @@
 import { createStore } from "redux";
 import { ToDoItemProps } from "../components/ToDoItem";
 
-type State = {
+export type State = {
   items: ToDoItemProps[];
   newItem: ToDoItemProps | null;
 };
 
+type EditItemPayload = string;
+
 type Action = {
   type: string;
+  payload?: EditItemPayload;
 };
 
-const toDoListReducer = (
+export const toDoListReducer = (
   state: State | undefined,
   action: Action
 ): State | undefined => {
@@ -18,6 +21,18 @@ const toDoListReducer = (
     case "ADD_ITEM":
       if (state && !state?.newItem) {
         return { ...state, newItem: { text: "", isEditing: true } };
+      }
+      return state;
+    case "EDIT_NEW_ITEM":
+      if (state && action.payload) {
+        const newItem: ToDoItemProps = {
+          ...state.newItem,
+          text: action.payload,
+        };
+        return {
+          ...state,
+          newItem,
+        };
       }
       return state;
     case "CREATE_ITEM":

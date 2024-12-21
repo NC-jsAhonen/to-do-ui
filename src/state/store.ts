@@ -47,7 +47,7 @@ export const toDoListReducer = (
     case "CANCEL_ITEM":
       if (state) {
         const { items } = state;
-        return { ...state, items, newItem: null };
+        return { items, newItem: null };
       }
       return state;
     default:

@@ -63,6 +63,18 @@ export const toDoListReducer = (
         return { ...state, items: newItems };
       }
       return state;
+    case "EDIT_ITEM":
+      if (state && action.targetItemId) {
+        const { items } = state;
+        const newItems = items.map((item) => {
+          if (action.payload && item.id == action.targetItemId) {
+            item.text = action.payload;
+          }
+          return item;
+        });
+        return { ...state, items: newItems };
+      }
+      return state;
     default:
       return state;
   }

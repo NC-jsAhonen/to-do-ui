@@ -24,18 +24,6 @@ export const toDoListReducer = (
         return { ...state, newItem: { text: "", isEditing: true } };
       }
       return state;
-    case "EDIT_NEW_ITEM":
-      if (state && action.payload) {
-        const newItem: ToDoItemProps = {
-          ...state.newItem,
-          text: action.payload,
-        };
-        return {
-          ...state,
-          newItem,
-        };
-      }
-      return state;
     case "CREATE_ITEM":
       if (state && state?.newItem) {
         const { items, newItem } = state;
@@ -76,15 +64,30 @@ export const toDoListReducer = (
       }
       return state;
     case "EDIT_ITEM":
-      if (state && action.targetItemId) {
-        const { items } = state;
-        const newItems = items.map((item) => {
-          if (action.payload && item.id == action.targetItemId) {
-            item.text = action.payload;
-          }
-          return item;
-        });
-        return { ...state, items: newItems };
+      if (state && action.payload) {
+        const { payload } = action;
+
+        // Edit existing item
+        if (action.targetItemId) {
+          const { items } = state;
+          const newItems = items.map((item) => {
+            if (item.id == action.targetItemId) {
+              item.text = payload;
+            }
+            return item;
+          });
+          return { ...state, items: newItems };
+        }
+
+        // Edit new item
+        const newItem: ToDoItemProps = {
+          ...state.newItem,
+          text: payload,
+        };
+        return {
+          ...state,
+          newItem,
+        };
       }
       return state;
     default:

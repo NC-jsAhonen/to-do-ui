@@ -18,25 +18,6 @@ test("should define empty item when adding item", () => {
   expect(state?.newItem).toEqual(expectedNewItem);
 });
 
-test("should change new item's text when edit new action is run", () => {
-  const initialState: State = {
-    items: [],
-    newItem: { text: "", isEditing: true },
-  };
-
-  const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "EDIT_NEW_ITEM", payload: "Clean up your room" });
-
-  const state = store.getState();
-
-  const expectedNewItem: ToDoItemProps = {
-    text: "Clean up your room",
-    isEditing: true,
-  };
-
-  expect(state?.newItem).toEqual(expectedNewItem);
-});
-
 test("should add new item to the items list when create item is run", () => {
   const initialState: State = {
     items: [],
@@ -211,4 +192,23 @@ test("should set an existing item's text as the given payload when EDIT_ITEM is 
   };
 
   expect(state).toEqual(expectedState);
+});
+
+test("should change the new item's text when EDIT_ITEM is run without targetItemId", () => {
+  const initialState: State = {
+    items: [],
+    newItem: { text: "", isEditing: true },
+  };
+
+  const store = createStore(toDoListReducer, initialState);
+  store.dispatch({ type: "EDIT_ITEM", payload: "Clean up your room" });
+
+  const state = store.getState();
+
+  const expectedNewItem: ToDoItemProps = {
+    text: "Clean up your room",
+    isEditing: true,
+  };
+
+  expect(state?.newItem).toEqual(expectedNewItem);
 });

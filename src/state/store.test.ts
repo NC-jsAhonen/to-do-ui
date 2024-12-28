@@ -86,7 +86,7 @@ test("should empty new item when CANCEL_ITEM is run", () => {
   expect(state).toEqual(expectedState);
 });
 
-test("should set an existing item's isEditing as true when TOGGLE_IS_EDITING is run", () => {
+test("should set an existing item's isEditing as true when START_EDITING_ITEM is run", () => {
   const initialState: State = {
     items: [
       {
@@ -104,7 +104,7 @@ test("should set an existing item's isEditing as true when TOGGLE_IS_EDITING is 
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "TOGGLE_IS_EDITING", targetItemId: 2 });
+  store.dispatch({ type: "START_EDITING_ITEM", targetItemId: 2 });
 
   const state = store.getState();
 
@@ -127,7 +127,7 @@ test("should set an existing item's isEditing as true when TOGGLE_IS_EDITING is 
   expect(state).toEqual(expectedState);
 });
 
-test("should set an existing item's isEditing as true when TOGGLE_IS_EDITING is run", () => {
+test("should set an existing item's isEditing as false when SAVE_ITEM is run", () => {
   const initialState: State = {
     items: [
       {
@@ -145,7 +145,7 @@ test("should set an existing item's isEditing as true when TOGGLE_IS_EDITING is 
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "TOGGLE_IS_EDITING", targetItemId: 2 });
+  store.dispatch({ type: "SAVE_ITEM", targetItemId: 2 });
 
   const state = store.getState();
 

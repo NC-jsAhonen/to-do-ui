@@ -51,12 +51,24 @@ export const toDoListReducer = (
         return { items, newItem: null };
       }
       return state;
-    case "TOGGLE_IS_EDITING":
+    case "START_EDITING_ITEM":
       if (state && action.targetItemId) {
         const { items } = state;
         const newItems = items.map((item) => {
           if (item.id == action.targetItemId) {
-            item.isEditing = !item.isEditing;
+            item.isEditing = true;
+          }
+          return item;
+        });
+        return { ...state, items: newItems };
+      }
+      return state;
+    case "SAVE_ITEM":
+      if (state && action.targetItemId) {
+        const { items } = state;
+        const newItems = items.map((item) => {
+          if (item.id == action.targetItemId) {
+            item.isEditing = false;
           }
           return item;
         });

@@ -14,10 +14,15 @@ type Action = {
   targetItemId?: number;
 };
 
+const defaultState: State = {
+  items: [],
+  newItem: null,
+};
+
 export const toDoListReducer = (
-  state: State | undefined,
+  state: State = defaultState,
   action: Action
-): State | undefined => {
+): State => {
   switch (action.type) {
     case "ADD_ITEM":
       if (state && !state?.newItem) {

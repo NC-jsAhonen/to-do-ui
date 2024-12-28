@@ -34,3 +34,7 @@ To run the unit tests, run:
 ```bash
 npm run test
 ```
+
+## Notes
+
+Error seeding: what methods, where does it fit in the test-driven development?

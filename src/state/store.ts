@@ -11,6 +11,7 @@ type EditItemPayload = string;
 type Action = {
   type: string;
   payload?: EditItemPayload;
+  targetItemId?: number;
 };
 
 export const toDoListReducer = (
@@ -48,6 +49,18 @@ export const toDoListReducer = (
       if (state) {
         const { items } = state;
         return { items, newItem: null };
+      }
+      return state;
+    case "TOGGLE_IS_EDITING":
+      if (state && action.targetItemId) {
+        const { items } = state;
+        const newItems = items.map((item) => {
+          if (item.id == action.targetItemId) {
+            item.isEditing = !item.isEditing;
+          }
+          return item;
+        });
+        return { ...state, items: newItems };
       }
       return state;
     default:

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export type ToDoItemProps = {
+  id?: number;
   text: string;
   isEditing?: boolean;
 };

@@ -100,4 +100,4 @@ export const toDoListReducer = (
   }
 };
 
-export const store = createStore(toDoListReducer);
+export const store = createStore(toDoListReducer, defaultState);

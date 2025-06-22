@@ -1,7 +1,6 @@
 import { createStore } from "redux";
 import { test, expect } from "vitest";
 import { State, toDoListReducer } from "./store";
-import { ToDoItemProps } from "../components/ToDoItem";
 
 test("should define empty item when adding item", () => {
   const initialState: State = {
@@ -13,9 +12,12 @@ test("should define empty item when adding item", () => {
 
   const state = store.getState();
 
-  const expectedNewItem: ToDoItemProps = { text: "", isEditing: true };
+  const expectedState: State = {
+    items: [],
+    newItem: { text: "", isEditing: true },
+  };
 
-  expect(state?.newItem).toEqual(expectedNewItem);
+  expect(state).toEqual(expectedState);
 });
 
 test("should add new item to the items list when create item is run", () => {
@@ -205,10 +207,13 @@ test("should change the new item's text when EDIT_ITEM is run without targetItem
 
   const state = store.getState();
 
-  const expectedNewItem: ToDoItemProps = {
-    text: "Clean up your room",
-    isEditing: true,
+  const expectedState: State = {
+    items: [],
+    newItem: {
+      text: "Clean up your room",
+      isEditing: true,
+    },
   };
 
-  expect(state?.newItem).toEqual(expectedNewItem);
+  expect(state).toEqual(expectedState);
 });

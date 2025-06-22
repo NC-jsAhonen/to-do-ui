@@ -38,7 +38,7 @@ test("should add new item to the items list when create item is run", () => {
     items: [
       {
         text: "Clean up your room",
-        isEditing: true,
+        isEditing: false,
       },
     ],
     newItem: null,

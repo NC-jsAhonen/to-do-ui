@@ -33,7 +33,7 @@ export const toDoListReducer = (
       if (state && state?.newItem) {
         const { items, newItem } = state;
         return {
-          items: [...items, newItem],
+          items: [...items, { ...newItem, isEditing: false }],
           newItem: null,
         };
       }

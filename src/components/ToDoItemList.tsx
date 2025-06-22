@@ -3,6 +3,7 @@ import { store } from "../state/store";
 import { AddItemButton } from "./AddItemButton";
 import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
+import { ChangeEvent } from "react";
 
 export const ToDoItemList = () => {
   const items: ToDoItemProps[] = useSelector(selectItems);
@@ -14,6 +15,11 @@ export const ToDoItemList = () => {
     logging();
   };
 
+  const editItem = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "EDIT_ITEM", payload: e.target.value });
+    logging();
+  };
+
   const logging = () => {
     console.log(store.getState());
   };
@@ -22,7 +28,7 @@ export const ToDoItemList = () => {
       {items.map((item) => (
         <ToDoItem {...item} />
       ))}
-      {newItem && <ToDoItem {...newItem} />}
+      {newItem && <ToDoItem {...newItem} onChange={editItem} />}
       <AddItemButton onClick={addItem} />
     </div>
   );

@@ -30,7 +30,7 @@ export const toDoListReducer = (
       }
       return state;
     case "CREATE_ITEM":
-      if (state && state?.newItem) {
+      if (state && state?.newItem && state?.newItem?.text) {
         const { items, newItem } = state;
         return {
           items: [...items, { ...newItem, isEditing: false }],
@@ -60,7 +60,7 @@ export const toDoListReducer = (
       if (state && action.targetItemId) {
         const { items } = state;
         const newItems = items.map((item) => {
-          if (item.id == action.targetItemId) {
+          if (item.id == action.targetItemId && item?.text) {
             item.isEditing = false;
           }
           return item;

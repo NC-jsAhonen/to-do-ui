@@ -69,7 +69,7 @@ export const toDoListReducer = (
       }
       return state;
     case "EDIT_ITEM":
-      if (state && action.payload) {
+      if (state && action) {
         const { payload } = action;
 
         // Edit existing item
@@ -77,7 +77,7 @@ export const toDoListReducer = (
           const { items } = state;
           const newItems = items.map((item) => {
             if (item.id == action.targetItemId) {
-              item.text = payload;
+              item.text = payload || "";
             }
             return item;
           });

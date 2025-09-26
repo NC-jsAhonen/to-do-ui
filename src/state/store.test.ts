@@ -2,6 +2,47 @@ import { createStore } from "redux";
 import { test, expect } from "vitest";
 import { State, toDoListReducer } from "./store";
 
+test("should set items", () => {
+  const initialState: State = {
+    items: [],
+    newItem: null,
+  };
+  const store = createStore(toDoListReducer, initialState);
+  store.dispatch({
+    type: "SET_ITEMS",
+    payload: [
+      {
+        id: 1,
+        text: "Clean up your room",
+      },
+      {
+        id: 2,
+        text: "Slay the Dragon",
+      },
+    ],
+  });
+
+  const expectedState: State = {
+    items: [
+      {
+        id: 1,
+        text: "Clean up your room",
+        isEditing: false,
+      },
+      {
+        id: 2,
+        text: "Slay the Dragon",
+        isEditing: false,
+      },
+    ],
+    newItem: null,
+  };
+
+  const state = store.getState();
+
+  expect(state).toEqual(expectedState);
+});
+
 test("should define empty item when adding item", () => {
   const initialState: State = {
     items: [],

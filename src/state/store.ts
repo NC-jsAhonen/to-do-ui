@@ -1,5 +1,6 @@
-import { createStore } from "redux";
+import { applyMiddleware, createStore } from "redux";
 import { ToDoItemProps } from "../components/ToDoItem";
+import { thunk } from "redux-thunk";
 
 export type State = {
   items: ToDoItemProps[];
@@ -7,10 +8,11 @@ export type State = {
 };
 
 type EditItemPayload = string;
+type SetItemsPayload = ToDoItemProps[];
 
 type Action = {
   type: string;
-  payload?: EditItemPayload;
+  payload?: EditItemPayload | SetItemsPayload;
   targetItemId?: number;
 };
 
@@ -68,6 +70,15 @@ export const toDoListReducer = (
         return { ...state, items: newItems };
       }
       return state;
+    case "SET_ITEMS":
+      if (state && action.payload && Array.isArray(action.payload)) {
+        const newItems = action.payload.map((item: ToDoItemProps) => ({
+          ...item,
+          isEditing: false,
+        }));
+        return { ...state, items: newItems };
+      }
+      return state;
     case "EDIT_ITEM":
       if (state && action) {
         const { payload } = action;
@@ -100,4 +111,8 @@ export const toDoListReducer = (
   }
 };
 
-export const store = createStore(toDoListReducer, defaultState);
+export const store = createStore(
+  toDoListReducer,
+  defaultState,
+  applyMiddleware(thunk)
+);

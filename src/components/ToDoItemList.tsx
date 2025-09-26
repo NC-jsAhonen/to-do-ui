@@ -3,8 +3,9 @@ import { store } from "../state/store";
 import { AddItemButton } from "./AddItemButton";
 import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { fetchItems } from "../state/actions";
 
 export const ToDoItemList = () => {
   const items: ToDoItemProps[] = useSelector(selectItems);
@@ -29,6 +30,11 @@ export const ToDoItemList = () => {
   const logging = () => {
     console.log(store.getState());
   };
+
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, []);
+
   return (
     <div className="to-do-item-list">
       {items.map((item) => (

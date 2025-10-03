@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { store } from "../state/store";
 import { AddItemButton } from "./AddItemButton";
 import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
@@ -14,26 +13,18 @@ export const ToDoItemList = () => {
 
   const addItem = () => {
     dispatch({ type: "ADD_ITEM" });
-    logging();
   };
 
   const editItem = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "EDIT_ITEM", payload: e.target.value });
-    logging();
   };
 
   const createItem = () => {
     dispatch({ type: "CREATE_ITEM" });
-    logging();
   };
 
   const cancelItem = () => {
     dispatch({ type: "CANCEL_ITEM" });
-    logging();
-  };
-
-  const logging = () => {
-    console.log(store.getState());
   };
 
   useEffect(() => {

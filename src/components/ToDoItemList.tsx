@@ -27,6 +27,11 @@ export const ToDoItemList = () => {
     logging();
   };
 
+  const cancelItem = () => {
+    dispatch({ type: "CANCEL_ITEM" });
+    logging();
+  };
+
   const logging = () => {
     console.log(store.getState());
   };
@@ -41,7 +46,7 @@ export const ToDoItemList = () => {
         <ToDoItem key={`to-do-item-${uuid()}`} {...item} onChange={editItem} />
       ))}
       {newItem && (
-        <ToDoItem {...newItem} onChange={editItem} onCreate={createItem} />
+        <ToDoItem {...newItem} onChange={editItem} onCreate={createItem} onCancel={cancelItem} />
       )}
       <AddItemButton onClick={addItem} />
     </div>

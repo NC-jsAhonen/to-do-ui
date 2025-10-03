@@ -6,12 +6,14 @@ export type ToDoItemProps = {
   isEditing?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onCreate?: () => void;
+  onCancel?: () => void;
 };
 export const ToDoItem = ({
   text,
   isEditing = false,
   onChange,
   onCreate,
+  onCancel,
 }: ToDoItemProps) => {
   return isEditing ? (
     <div className="list-item">
@@ -20,7 +22,7 @@ export const ToDoItem = ({
         <button className="create-item-button" onClick={onCreate}>
           V
         </button>
-        <button className="cancel-item-button">X</button>
+        <button className="cancel-item-button" onClick={onCancel}>X</button>
       </div>
     </div>
   ) : (

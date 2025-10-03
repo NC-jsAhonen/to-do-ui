@@ -28,6 +28,7 @@ export const ToDoItemList = () => {
   };
 
   useEffect(() => {
+    //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
     dispatch(fetchItems());
   }, []);
 

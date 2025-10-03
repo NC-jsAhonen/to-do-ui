@@ -113,7 +113,7 @@ test("should NOT add new item to the items list when new item text is empty", ()
   expect(state).toEqual(expectedState);
 });
 
-test("should empty new item when CANCEL_ITEM is run", () => {
+test("should empty new item when EMPTY_NEW_ITEM is run", () => {
   const initialState: State = {
     items: [],
     newItem: {
@@ -123,7 +123,7 @@ test("should empty new item when CANCEL_ITEM is run", () => {
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "CANCEL_ITEM" });
+  store.dispatch({ type: "EMPTY_NEW_ITEM" });
 
   const state = store.getState();
 

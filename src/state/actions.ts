@@ -6,7 +6,7 @@ import { ToDoItemProps } from "../components/ToDoItem";
 // Action types
 export const ADD_ITEM = "ADD_ITEM";
 export const CREATE_ITEM = "CREATE_ITEM";
-export const CANCEL_ITEM = "CANCEL_ITEM";
+export const EMPTY_NEW_ITEM = "EMPTY_NEW_ITEM";
 export const START_EDITING_ITEM = "START_EDITING_ITEM";
 export const SAVE_ITEM = "SAVE_ITEM";
 export const EDIT_ITEM = "EDIT_ITEM";
@@ -17,7 +17,7 @@ export const addItem = () => ({ type: ADD_ITEM });
 
 export const createItem = () => ({ type: CREATE_ITEM });
 
-export const cancelItem = () => ({ type: CANCEL_ITEM });
+export const cancelItem = () => ({ type: EMPTY_NEW_ITEM });
 
 export const startEditingItem = (targetItemId: number) => ({
   type: START_EDITING_ITEM,

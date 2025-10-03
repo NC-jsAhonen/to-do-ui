@@ -4,7 +4,7 @@ import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
 import { ChangeEvent, useEffect } from "react";
 import { v4 as uuid } from "uuid";
-import { fetchItems } from "../state/actions";
+import { cancelItem, fetchItems } from "../state/actions";
 
 export const ToDoItemList = () => {
   const items: ToDoItemProps[] = useSelector(selectItems);
@@ -22,9 +22,9 @@ export const ToDoItemList = () => {
   const createItem = () => {
     dispatch({ type: "CREATE_ITEM" });
   };
-
-  const cancelItem = () => {
-    dispatch({ type: "CANCEL_ITEM" });
+  
+  const handleCancelItem = () => {
+    dispatch(cancelItem());
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const ToDoItemList = () => {
         <ToDoItem key={`to-do-item-${uuid()}`} {...item} onChange={editItem} />
       ))}
       {newItem && (
-        <ToDoItem {...newItem} onChange={editItem} onCreate={createItem} onCancel={cancelItem} />
+        <ToDoItem {...newItem} onChange={editItem} onCreate={createItem} onCancel={handleCancelItem} />
       )}
       <AddItemButton onClick={addItem} />
     </div>

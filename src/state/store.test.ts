@@ -124,6 +124,47 @@ test("should set an existing item's isEditing as true when START_EDITING_ITEM is
   expect(state).toEqual(expectedState);
 });
 
+test("should set an existing item's isEditing as false if it's true when START_EDITING_ITEM is run for another item", () => {
+  const initialState: State = {
+    items: [
+      {
+        id: 1,
+        text: "Clean up your room",
+        isEditing: true,
+      },
+      {
+        id: 2,
+        text: "Slay the Dragon",
+        isEditing: false,
+      },
+    ],
+    newItem: null,
+  };
+
+  const store = createStore(toDoListReducer, initialState);
+  store.dispatch({ type: "START_EDITING_ITEM", targetItemId: 2 });
+
+  const state = store.getState();
+
+  const expectedState: State = {
+    items: [
+      {
+        id: 1,
+        text: "Clean up your room",
+        isEditing: false,
+      },
+      {
+        id: 2,
+        text: "Slay the Dragon",
+        isEditing: true,
+      },
+    ],
+    newItem: null,
+  };
+
+  expect(state).toEqual(expectedState);
+});
+
 test("should set an existing item's isEditing as false when SAVE_ITEM is run", () => {
   const initialState: State = {
     items: [

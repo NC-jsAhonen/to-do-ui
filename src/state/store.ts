@@ -43,6 +43,8 @@ export const toDoListReducer = (
         const newItems = items.map((item) => {
           if (item.id == action.targetItemId) {
             item.isEditing = true;
+          } else {
+            item.isEditing = false;
           }
           return item;
         });

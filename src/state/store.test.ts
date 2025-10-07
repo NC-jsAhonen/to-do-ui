@@ -61,58 +61,6 @@ test("should define empty item when adding item", () => {
   expect(state).toEqual(expectedState);
 });
 
-test("should add new item to the items list when create item is run", () => {
-  const initialState: State = {
-    items: [],
-    newItem: {
-      text: "Clean up your room",
-      isEditing: true,
-    },
-  };
-
-  const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "CREATE_ITEM" });
-
-  const state = store.getState();
-
-  const expectedState: State = {
-    items: [
-      {
-        text: "Clean up your room",
-        isEditing: false,
-      },
-    ],
-    newItem: null,
-  };
-
-  expect(state).toEqual(expectedState);
-});
-
-test("should NOT add new item to the items list when new item text is empty", () => {
-  const initialState: State = {
-    items: [],
-    newItem: {
-      text: "",
-      isEditing: true,
-    },
-  };
-
-  const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "CREATE_ITEM" });
-
-  const state = store.getState();
-
-  const expectedState: State = {
-    items: [],
-    newItem: {
-      text: "",
-      isEditing: true,
-    },
-  };
-
-  expect(state).toEqual(expectedState);
-});
-
 test("should empty new item when EMPTY_NEW_ITEM is run", () => {
   const initialState: State = {
     items: [],

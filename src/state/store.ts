@@ -31,15 +31,6 @@ export const toDoListReducer = (
         return { ...state, newItem: { text: "", isEditing: true } };
       }
       return state;
-    case "CREATE_ITEM":
-      if (state && state?.newItem && state?.newItem?.text) {
-        const { items, newItem } = state;
-        return {
-          items: [...items, { ...newItem, isEditing: false }],
-          newItem: null,
-        };
-      }
-      return state;
     case "EMPTY_NEW_ITEM":
       if (state) {
         const { items } = state;

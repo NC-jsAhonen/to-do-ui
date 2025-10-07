@@ -5,6 +5,7 @@ import { selectItems, selectNewItem } from "../state/selectors";
 import { ChangeEvent, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { cancelItem, fetchItems } from "../state/actions";
+import { createItem } from "../state/actions";
 
 export const ToDoItemList = () => {
   const items: ToDoItemProps[] = useSelector(selectItems);
@@ -19,8 +20,9 @@ export const ToDoItemList = () => {
     dispatch({ type: "EDIT_ITEM", payload: e.target.value });
   };
 
-  const createItem = () => {
-    dispatch({ type: "CREATE_ITEM" });
+  const handleCreateItem = () => {
+    //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
+    dispatch(createItem());
   };
   
   const handleCancelItem = () => {
@@ -38,7 +40,7 @@ export const ToDoItemList = () => {
         <ToDoItem key={`to-do-item-${uuid()}`} {...item} onChange={editItem} />
       ))}
       {newItem && (
-        <ToDoItem {...newItem} onChange={editItem} onCreate={createItem} onCancel={handleCancelItem} />
+        <ToDoItem {...newItem} onChange={editItem} onCreate={handleCreateItem} onCancel={handleCancelItem} />
       )}
       <AddItemButton onClick={addItem} />
     </div>

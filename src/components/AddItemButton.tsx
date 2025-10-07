@@ -1,5 +1,3 @@
-import { store } from "../state/store";
-
 type Props = {
   onClick: () => void;
 };

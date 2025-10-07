@@ -2,10 +2,10 @@
 import { Dispatch } from "redux";
 import api from "../api/api-instance";
 import { ToDoItemProps } from "../components/ToDoItem";
+import { store } from "./store";
 
 // Action types
 export const ADD_ITEM = "ADD_ITEM";
-export const CREATE_ITEM = "CREATE_ITEM";
 export const EMPTY_NEW_ITEM = "EMPTY_NEW_ITEM";
 export const START_EDITING_ITEM = "START_EDITING_ITEM";
 export const SAVE_ITEM = "SAVE_ITEM";
@@ -14,8 +14,6 @@ export const SET_ITEMS = "SET_ITEMS";
 
 // Synchronous Action Creators
 export const addItem = () => ({ type: ADD_ITEM });
-
-export const createItem = () => ({ type: CREATE_ITEM });
 
 export const cancelItem = () => ({ type: EMPTY_NEW_ITEM });
 
@@ -34,6 +32,8 @@ export const editItem = (payload: string, targetItemId?: number) => ({
   payload,
   targetItemId,
 });
+
+// Asynchronous Action Creators
 
 export const fetchItems = () => {
   return async (
@@ -60,6 +60,34 @@ export const fetchItems = () => {
       } else {
         console.error("Failed to fetch items: ", error);
       }
+    }
+  };
+};
+
+// Create item from state.newItem with a POST request to the backend
+
+export const createItem = () => {
+  return async (
+    dispatch: Dispatch,
+  ) => {
+    const state = store.getState();
+    if (!state.newItem) return;
+
+    try {
+      const response = await api({
+        method: "POST",
+        url: "/items/",
+        data: {
+          text: state.newItem.text,
+          list: 1,
+        },
+      });
+      const newItem: ToDoItemProps = response?.data;
+      const items = [...state.items, newItem];
+      dispatch({ type: SET_ITEMS, payload: items });
+      dispatch({ type: EMPTY_NEW_ITEM });
+    } catch (error) {
+      console.error("Failed to create item: ", error);
     }
   };
 };

@@ -3,7 +3,6 @@ import { AddItemButton } from "./AddItemButton";
 import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
 import { ChangeEvent, useEffect } from "react";
-import { v4 as uuid } from "uuid";
 import { cancelItem, fetchItems } from "../state/actions";
 import { createItem } from "../state/actions";
 
@@ -16,17 +15,25 @@ export const ToDoItemList = () => {
     dispatch({ type: "ADD_ITEM" });
   };
 
-  const editItem = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "EDIT_ITEM", payload: e.target.value });
+  const editItem = (text: string, id?: number) => {
+    dispatch({ type: "EDIT_ITEM", payload: text, targetItemId: id });
   };
 
   const handleCreateItem = () => {
     //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
     dispatch(createItem());
   };
-  
+
   const handleCancelItem = () => {
     dispatch(cancelItem());
+  };
+
+  const handleStartEditingItem = (id: number) => {
+    dispatch({ type: "START_EDITING_ITEM", targetItemId: id });
+  };
+
+  const handleSaveItem = (id: number) => {
+    dispatch({ type: "SAVE_ITEM", targetItemId: id });
   };
 
   useEffect(() => {
@@ -37,10 +44,25 @@ export const ToDoItemList = () => {
   return (
     <div className="to-do-item-list">
       {items.map((item) => (
-        <ToDoItem key={`to-do-item-${uuid()}`} {...item} onChange={editItem} />
+        <ToDoItem
+          key={`to-do-item-${item.id}`}
+          {...item}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            editItem(e.target.value, item.id);
+          }}
+          onStartEditing={() => handleStartEditingItem(item.id)}
+          onSave={() => handleSaveItem(item.id)}
+        />
       ))}
       {newItem && (
-        <ToDoItem {...newItem} onChange={editItem} onCreate={handleCreateItem} onCancel={handleCancelItem} />
+        <ToDoItem
+          {...newItem}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            editItem(e.target.value);
+          }}
+          onCreate={handleCreateItem}
+          onCancel={handleCancelItem}
+        />
       )}
       <AddItemButton onClick={addItem} />
     </div>

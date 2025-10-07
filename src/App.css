@@ -22,7 +22,7 @@
   padding: 0.5rem 1rem;
 }
 
-.create-item-button {
+.create-item-button, .save-item-button {
   background-color: transparent;
   color: green;
 }

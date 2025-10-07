@@ -8,6 +8,8 @@ export type ToDoItemProps = {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onCreate?: () => void;
   onCancel?: () => void;
+  onStartEditing?: () => void;
+  onSave?: () => void;
 };
 export const ToDoItem = ({
   text,
@@ -15,22 +17,25 @@ export const ToDoItem = ({
   onChange,
   onCreate,
   onCancel,
+  onStartEditing,
+  onSave,
 }: ToDoItemProps) => {
   return isEditing ? (
     <div className="list-item">
       <input value={text} onChange={onChange} />
       <div className="button-set">
-        <button className="create-item-button" onClick={onCreate}>
+        {onCreate && <button className="create-item-button" onClick={onCreate}>
           V
-        </button>
-        <button className="cancel-item-button" onClick={onCancel}>X</button>
+        </button>}
+        {onCancel && <button className="cancel-item-button" onClick={onCancel}>X</button>}
+        {onSave && <button className="save-item-button" onClick={onSave}>V</button>}
       </div>
     </div>
   ) : (
     <div className="list-item">
       <span>{text}</span>
       <div className="button-set">
-        <EditItemButton onClick={() => console.log("Edit clicked")} />
+        <EditItemButton onClick={onStartEditing} />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import { EditItemButton } from "./EditItemButton";
 
 export type ToDoItemProps = {
   id?: number;
@@ -26,6 +27,11 @@ export const ToDoItem = ({
       </div>
     </div>
   ) : (
-    <div className="list-item">{text}</div>
+    <div className="list-item">
+      <span>{text}</span>
+      <div className="button-set">
+        <EditItemButton onClick={() => console.log("Edit clicked")} />
+      </div>
+    </div>
   );
 };

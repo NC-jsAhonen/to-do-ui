@@ -46,6 +46,12 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+
+  img {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
 }
 button:hover {
   border-color: #646cff;

@@ -3,7 +3,15 @@ import { AddItemButton } from "./AddItemButton";
 import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
 import { ChangeEvent, useEffect } from "react";
-import { cancelItem, deleteItem, fetchItems, updateItem } from "../state/actions";
+import {
+  ADD_ITEM,
+  cancelItem,
+  deleteItem,
+  EDIT_ITEM,
+  fetchItems,
+  START_EDITING_ITEM,
+  updateItem,
+} from "../state/actions";
 import { createItem } from "../state/actions";
 
 export const ToDoItemList = () => {
@@ -12,11 +20,11 @@ export const ToDoItemList = () => {
   const dispatch = useDispatch();
 
   const addItem = () => {
-    dispatch({ type: "ADD_ITEM" });
+    dispatch({ type: ADD_ITEM });
   };
 
   const editItem = (text: string, id?: number) => {
-    dispatch({ type: "EDIT_ITEM", payload: text, targetItemId: id });
+    dispatch({ type: EDIT_ITEM, payload: text, targetItemId: id });
   };
 
   const handleCreateItem = () => {
@@ -29,7 +37,7 @@ export const ToDoItemList = () => {
   };
 
   const handleStartEditingItem = (id: number) => {
-    dispatch({ type: "START_EDITING_ITEM", targetItemId: id });
+    dispatch({ type: START_EDITING_ITEM, targetItemId: id });
   };
 
   const handleUpdateItem = (id: number) => {
@@ -38,7 +46,7 @@ export const ToDoItemList = () => {
   };
 
   const handleDeleteItem = (id: number) => {
-    const deleteConfirmed = confirm("Are you sure?")
+    const deleteConfirmed = confirm("Are you sure?");
     if (deleteConfirmed) {
       //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
       dispatch(deleteItem(id));

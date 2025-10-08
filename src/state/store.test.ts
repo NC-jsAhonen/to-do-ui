@@ -1,6 +1,13 @@
 import { createStore } from "redux";
 import { test, expect } from "vitest";
 import { State, toDoListReducer } from "./store";
+import {
+  ADD_ITEM,
+  EDIT_ITEM,
+  EMPTY_NEW_ITEM,
+  SET_ITEMS,
+  START_EDITING_ITEM,
+} from "./actions";
 
 test("should set items", () => {
   const initialState: State = {
@@ -9,7 +16,7 @@ test("should set items", () => {
   };
   const store = createStore(toDoListReducer, initialState);
   store.dispatch({
-    type: "SET_ITEMS",
+    type: SET_ITEMS,
     payload: [
       {
         id: 1,
@@ -49,7 +56,7 @@ test("should define empty item when adding item", () => {
     newItem: null,
   };
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "ADD_ITEM" });
+  store.dispatch({ type: ADD_ITEM });
 
   const state = store.getState();
 
@@ -71,7 +78,7 @@ test("should empty new item when EMPTY_NEW_ITEM is run", () => {
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "EMPTY_NEW_ITEM" });
+  store.dispatch({ type: EMPTY_NEW_ITEM });
 
   const state = store.getState();
 
@@ -101,7 +108,7 @@ test("should set an existing item's isEditing as true when START_EDITING_ITEM is
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "START_EDITING_ITEM", targetItemId: 2 });
+  store.dispatch({ type: START_EDITING_ITEM, targetItemId: 2 });
 
   const state = store.getState();
 
@@ -142,7 +149,7 @@ test("should set an existing item's isEditing as false if it's true when START_E
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "START_EDITING_ITEM", targetItemId: 2 });
+  store.dispatch({ type: START_EDITING_ITEM, targetItemId: 2 });
 
   const state = store.getState();
 
@@ -184,7 +191,7 @@ test("should set an existing item's text as the given payload when EDIT_ITEM is 
 
   const store = createStore(toDoListReducer, initialState);
   store.dispatch({
-    type: "EDIT_ITEM",
+    type: EDIT_ITEM,
     payload: "Slay the Dragon now!",
     targetItemId: 2,
   });
@@ -217,7 +224,7 @@ test("should change the new item's text when EDIT_ITEM is run without targetItem
   };
 
   const store = createStore(toDoListReducer, initialState);
-  store.dispatch({ type: "EDIT_ITEM", payload: "Clean up your room" });
+  store.dispatch({ type: EDIT_ITEM, payload: "Clean up your room" });
 
   const state = store.getState();
 

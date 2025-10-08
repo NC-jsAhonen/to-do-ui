@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
 import { EditItemButton } from "./EditItemButton";
+import DeleteIcon from "/delete-bin-line.svg";
 
 export type ToDoItemProps = {
   id?: number;
@@ -10,6 +11,7 @@ export type ToDoItemProps = {
   onCancel?: () => void;
   onStartEditing?: () => void;
   onSave?: () => void;
+  onDelete?: () => void;
 };
 export const ToDoItem = ({
   text,
@@ -19,6 +21,7 @@ export const ToDoItem = ({
   onCancel,
   onStartEditing,
   onSave,
+  onDelete,
 }: ToDoItemProps) => {
   return isEditing ? (
     <div className="list-item">
@@ -29,6 +32,9 @@ export const ToDoItem = ({
         </button>}
         {onCancel && <button className="cancel-item-button" onClick={onCancel}>X</button>}
         {onSave && <button className="save-item-button" onClick={onSave}>V</button>}
+        {onDelete && <button onClick={onDelete}>
+          <img src={DeleteIcon} alt="Delete" />
+        </button>}
       </div>
     </div>
   ) : (

@@ -113,3 +113,21 @@ export const updateItem = (id: number) => {
     }
   };
 };
+
+export const deleteItem = (id: number) => {
+  return async (
+    dispatch: Dispatch,
+  ) => {
+    try {
+      await api({
+        method: "DELETE",
+        url: `/items/${id}/`,
+      });
+      const state = store.getState();
+      const items = state.items.filter((item) => item.id !== id);
+      dispatch({ type: SET_ITEMS, payload: items });
+    } catch (error) {
+      console.error("Failed to delete item: ", error);
+    }
+  };
+};

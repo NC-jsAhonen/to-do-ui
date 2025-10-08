@@ -4,6 +4,7 @@ import DeleteIcon from "/delete-bin-line.svg";
 
 export type ToDoItemProps = {
   id?: number;
+  done?: boolean;
   text: string;
   isEditing?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -12,8 +13,10 @@ export type ToDoItemProps = {
   onStartEditing?: () => void;
   onSave?: () => void;
   onDelete?: () => void;
+  onToggle?: () => void;
 };
 export const ToDoItem = ({
+  done = false,
   text,
   isEditing = false,
   onChange,
@@ -22,6 +25,7 @@ export const ToDoItem = ({
   onStartEditing,
   onSave,
   onDelete,
+  onToggle,
 }: ToDoItemProps) => {
   return isEditing ? (
     <div className="list-item">
@@ -39,6 +43,7 @@ export const ToDoItem = ({
     </div>
   ) : (
     <div className="list-item">
+      <input type="checkbox" onChange={onToggle} checked={done} />
       <span>{text}</span>
       <div className="button-set">
         <EditItemButton onClick={onStartEditing} />

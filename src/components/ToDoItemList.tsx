@@ -10,6 +10,7 @@ import {
   EDIT_ITEM,
   fetchItems,
   START_EDITING_ITEM,
+  toggleItemDone,
   updateItem,
 } from "../state/actions";
 import { createItem } from "../state/actions";
@@ -53,6 +54,11 @@ export const ToDoItemList = () => {
     }
   };
 
+  const handleToggleItemDone = (id: number) => {
+    //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
+    dispatch(toggleItemDone(id));
+  };
+
   useEffect(() => {
     //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
     dispatch(fetchItems());
@@ -70,6 +76,7 @@ export const ToDoItemList = () => {
           onStartEditing={() => handleStartEditingItem(item.id)}
           onSave={() => handleUpdateItem(item.id)}
           onDelete={() => handleDeleteItem(item.id)}
+          onToggle={() => handleToggleItemDone(item.id)}
         />
       ))}
       {newItem && (

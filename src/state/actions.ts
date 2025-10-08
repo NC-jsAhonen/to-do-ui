@@ -131,3 +131,24 @@ export const deleteItem = (id: number) => {
     }
   };
 };
+
+export const toggleItemDone = (id: number) => {
+  return async (
+    dispatch: Dispatch,
+  ) => {
+    try {
+      const response = await api({
+        method: "PATCH",
+        url: `/items/${id}/check/`,
+      });
+      const updatedItem: ToDoItemProps = response?.data;
+      const state = store.getState();
+      const items = state.items.map((item) =>
+        item.id === id ? updatedItem : item
+      );
+      dispatch({ type: SET_ITEMS, payload: items });
+    } catch (error) {
+      console.error("Failed to toggle item done status: ", error);
+    }
+  };
+};

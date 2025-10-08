@@ -2,12 +2,13 @@
 
 This is a learning project, implementing an app where users can create lists of task items.
 
-## Learning topics
+## Tech Stack
 
-- Test-driven development (TDD)
-- Unit tests with vitest
-- E2E tests (framework not yet decided)
+- Vite
+- Vitest
 - Redux
+- Redux Thunk and Axios
+- Remix Icons as downloaded assets, see [https://remixicon.com/](https://remixicon.com/)
 
 ## Development environment
 
@@ -34,7 +35,3 @@ To run the unit tests, run:
 ```bash
 npm run test
 ```
-
-## Notes
-
-Error seeding: what methods, where does it fit in the test-driven development?

@@ -3,7 +3,7 @@ import { AddItemButton } from "./AddItemButton";
 import { ToDoItem, ToDoItemProps } from "./ToDoItem";
 import { selectItems, selectNewItem } from "../state/selectors";
 import { ChangeEvent, useEffect } from "react";
-import { cancelItem, fetchItems } from "../state/actions";
+import { cancelItem, fetchItems, updateItem } from "../state/actions";
 import { createItem } from "../state/actions";
 
 export const ToDoItemList = () => {
@@ -32,8 +32,9 @@ export const ToDoItemList = () => {
     dispatch({ type: "START_EDITING_ITEM", targetItemId: id });
   };
 
-  const handleSaveItem = (id: number) => {
-    dispatch({ type: "SAVE_ITEM", targetItemId: id });
+  const handleUpdateItem = (id: number) => {
+    //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
+    dispatch(updateItem(id));
   };
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export const ToDoItemList = () => {
             editItem(e.target.value, item.id);
           }}
           onStartEditing={() => handleStartEditingItem(item.id)}
-          onSave={() => handleSaveItem(item.id)}
+          onSave={() => handleUpdateItem(item.id)}
         />
       ))}
       {newItem && (

@@ -8,7 +8,6 @@ import { store } from "./store";
 export const ADD_ITEM = "ADD_ITEM";
 export const EMPTY_NEW_ITEM = "EMPTY_NEW_ITEM";
 export const START_EDITING_ITEM = "START_EDITING_ITEM";
-export const SAVE_ITEM = "SAVE_ITEM";
 export const EDIT_ITEM = "EDIT_ITEM";
 export const SET_ITEMS = "SET_ITEMS";
 
@@ -19,11 +18,6 @@ export const cancelItem = () => ({ type: EMPTY_NEW_ITEM });
 
 export const startEditingItem = (targetItemId: number) => ({
   type: START_EDITING_ITEM,
-  targetItemId,
-});
-
-export const saveItem = (targetItemId: number) => ({
-  type: SAVE_ITEM,
   targetItemId,
 });
 
@@ -88,6 +82,34 @@ export const createItem = () => {
       dispatch({ type: EMPTY_NEW_ITEM });
     } catch (error) {
       console.error("Failed to create item: ", error);
+    }
+  };
+};
+
+export const updateItem = (id: number) => {
+  return async (
+    dispatch: Dispatch,
+  ) => {
+    const state = store.getState();
+    const itemToUpdate = state.items.find((item) => item.id === id);
+    if (!itemToUpdate) return;
+
+    try {
+      const response = await api({
+        method: "PATCH",
+        url: `/items/${id}/`,
+        data: {
+          text: itemToUpdate.text,
+          list: 1,
+        },
+      });
+      const updatedItem: ToDoItemProps = response?.data;
+      const items = state.items.map((item) =>
+        item.id === id ? updatedItem : item
+      );
+      dispatch({ type: SET_ITEMS, payload: items });
+    } catch (error) {
+      console.error("Failed to update item: ", error);
     }
   };
 };

@@ -51,18 +51,6 @@ export const toDoListReducer = (
         return { ...state, items: newItems };
       }
       return state;
-    case "SAVE_ITEM":
-      if (state && action.targetItemId) {
-        const { items } = state;
-        const newItems = items.map((item) => {
-          if (item.id == action.targetItemId && item?.text) {
-            item.isEditing = false;
-          }
-          return item;
-        });
-        return { ...state, items: newItems };
-      }
-      return state;
     case "SET_ITEMS":
       if (state && action.payload && Array.isArray(action.payload)) {
         const newItems = action.payload.map((item: ToDoItemProps) => ({

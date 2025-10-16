@@ -1,0 +1,149 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: ECS Fargate deployment for todo-ui React frontend
+
+# Before deployment:
+
+# 1. Create the ECR repository and push your Docker image there.
+
+# 2. Replace the placeholder values in the Parameters section:
+# <AWS_ACCOUNT_ID> - Your AWS Account ID
+# <REGION_ID> - AWS Region (e.g., us-east-1)
+# <DEFAULT_VPC_ID> - Your default VPC ID
+# <DEFAULT_SUBNET_ID> - A subnet ID in your default VPC
+# <ECR_REPO_URI> - The URI of your ECR repository 
+# (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com/todo-api:latest)
+
+# 3. Rename this file as iac.yaml
+
+
+Parameters:
+  ECRImageUri:
+    Type: String
+    Description: URI of the todo-ui image in ECR (e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com/todo-ui:latest)
+    Default: <ECR_REPO_URI>
+  ClusterName:
+    Type: String
+    Default: todo-ui-cluster
+  ServiceName:
+    Type: String
+    Default: todo-ui-service
+  ContainerPort:
+    Type: Number
+    Default: 80
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: The default VPC ID
+    Default: <DEFAULT_VPC_ID>
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: A subnet ID in the default VPC
+    Default: <DEFAULT_SUBNET_ID>
+
+Resources:
+
+  #######################################
+  # IAM Role for ECS Task Execution
+  #######################################
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: todo-ui-task-execution-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  #######################################
+  # ECS Cluster
+  #######################################
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Ref ClusterName
+
+  #######################################
+  # Security Group
+  #######################################
+  ECSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow inbound HTTP traffic
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref ContainerPort
+          ToPort: !Ref ContainerPort
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+  #######################################
+  # CloudWatch Log Group
+  #######################################
+  UICloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/todo-ui
+      RetentionInDays: 14
+
+  #######################################
+  # ECS Task Definition
+  #######################################
+  ECSTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: todo-ui-task
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: "256"
+      Memory: "512"
+      ExecutionRoleArn: !Ref ECSTaskExecutionRole
+      ContainerDefinitions:
+        - Name: todo-ui
+          Image: !Ref ECRImageUri
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref UICloudWatchLogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: todo-ui
+
+  #######################################
+  # ECS Service
+  #######################################
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Ref ServiceName
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref ECSTaskDefinition
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref SubnetId
+          SecurityGroups:
+            - !Ref ECSSecurityGroup
+    DependsOn: ECSTaskDefinition
+
+Outputs:
+  ECSClusterName:
+    Value: !Ref ECSCluster
+    Description: Name of the ECS Cluster
+  ECSServiceName:
+    Value: !Ref ECSService
+    Description: Name of the ECS Service
+  ECSTaskDefinitionArn:
+    Value: !Ref ECSTaskDefinition
+    Description: ARN of the ECS Task Definition

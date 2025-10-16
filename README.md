@@ -10,7 +10,9 @@ This is a learning project, implementing an app where users can create lists of 
 - Redux Thunk and Axios
 - Remix Icons as downloaded assets, see [https://remixicon.com/](https://remixicon.com/)
 - Docker
+- AWS CLI v2
 - AWS ECR
+- AWS CloudFormation
 
 ## Development environment
 
@@ -72,9 +74,32 @@ docker tag todo-ui:latest <account_id>.dkr.ecr.<region>.amazonaws.com/todo-ui:la
 docker push <account_id>.dkr.ecr.<region>.amazonaws.com/todo-ui:latest
 ```
 
+### Deploy the CloudFormation Stack
+
+Deploy resources with CloudFormation:
+
+```bash
+aws cloudformation deploy \
+  --profile main-admin \
+  --template-file iac.yaml \
+  --stack-name todo-ui-stack \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
+### Access the App
+
+Now the task has a public IP through which you can access the admin dashboard:
+
+```code
+http://<PUBLIC_IP>
+```
+
 ## Destroy the Deployment
 
 ```bash
+# Delete the CloudFormation Stack
+aws cloudformation delete-stack --profile main-admin --stack-name todo-ui-stack
+
 # Delete ECR repo
 aws ecr delete-repository --profile main-admin --repository todo-ui --force
 ```

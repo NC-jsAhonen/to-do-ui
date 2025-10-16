@@ -7,7 +7,7 @@ import {
   EMPTY_NEW_ITEM,
   SET_ITEMS,
   START_EDITING_ITEM,
-} from "./actions";
+} from "./store";
 
 test("should set items", () => {
   const initialState: State = {
@@ -20,11 +20,15 @@ test("should set items", () => {
     payload: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
+        isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
+        isEditing: false,
       },
     ],
   });
@@ -33,11 +37,13 @@ test("should set items", () => {
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
         isEditing: false,
       },
@@ -62,7 +68,7 @@ test("should define empty item when adding item", () => {
 
   const expectedState: State = {
     items: [],
-    newItem: { text: "", isEditing: true },
+    newItem: { done: false, text: "", isEditing: true },
   };
 
   expect(state).toEqual(expectedState);
@@ -72,6 +78,7 @@ test("should empty new item when EMPTY_NEW_ITEM is run", () => {
   const initialState: State = {
     items: [],
     newItem: {
+      done: false,
       text: "Clean up your room",
       isEditing: true,
     },
@@ -95,11 +102,13 @@ test("should set an existing item's isEditing as true when START_EDITING_ITEM is
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
         isEditing: false,
       },
@@ -116,11 +125,13 @@ test("should set an existing item's isEditing as true when START_EDITING_ITEM is
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
         isEditing: true,
       },
@@ -136,11 +147,13 @@ test("should set an existing item's isEditing as false if it's true when START_E
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: true,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
         isEditing: false,
       },
@@ -157,11 +170,13 @@ test("should set an existing item's isEditing as false if it's true when START_E
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
         isEditing: true,
       },
@@ -177,11 +192,13 @@ test("should set an existing item's text as the given payload when EDIT_ITEM is 
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon",
         isEditing: true,
       },
@@ -202,11 +219,13 @@ test("should set an existing item's text as the given payload when EDIT_ITEM is 
     items: [
       {
         id: 1,
+        done: false,
         text: "Clean up your room",
         isEditing: false,
       },
       {
         id: 2,
+        done: false,
         text: "Slay the Dragon now!",
         isEditing: true,
       },
@@ -220,7 +239,7 @@ test("should set an existing item's text as the given payload when EDIT_ITEM is 
 test("should change the new item's text when EDIT_ITEM is run without targetItemId", () => {
   const initialState: State = {
     items: [],
-    newItem: { text: "", isEditing: true },
+    newItem: { done: false, text: "", isEditing: true },
   };
 
   const store = createStore(toDoListReducer, initialState);
@@ -231,6 +250,7 @@ test("should change the new item's text when EDIT_ITEM is run without targetItem
   const expectedState: State = {
     items: [],
     newItem: {
+      done: false,
       text: "Clean up your room",
       isEditing: true,
     },

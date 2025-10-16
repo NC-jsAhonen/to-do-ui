@@ -1,23 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AddItemButton } from "./AddItemButton";
-import { ToDoItem, ToDoItemProps } from "./ToDoItem";
+import { ToDoItem } from './ToDoItem';
+import { NewToDoItemProps, ToDoItemProps } from "../types";
 import { selectItems, selectNewItem } from "../state/selectors";
 import { ChangeEvent, useEffect } from "react";
 import {
-  ADD_ITEM,
+  createItem,
   cancelItem,
   deleteItem,
-  EDIT_ITEM,
   fetchItems,
-  START_EDITING_ITEM,
   toggleItemDone,
   updateItem,
 } from "../state/actions";
-import { createItem } from "../state/actions";
+import {
+  ADD_ITEM,
+  EDIT_ITEM,
+  START_EDITING_ITEM,
+} from '../state/store';
 
 export const ToDoItemList = () => {
   const items: ToDoItemProps[] = useSelector(selectItems);
-  const newItem: ToDoItemProps | null = useSelector(selectNewItem);
+  const newItem: NewToDoItemProps | null = useSelector(selectNewItem);
   const dispatch = useDispatch();
 
   const addItem = () => {
@@ -32,8 +35,9 @@ export const ToDoItemList = () => {
     //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
     dispatch(createItem());
   };
-
+  
   const handleCancelItem = () => {
+    //@ts-expect-error: Argument of type '(dispatch: Dispatch) => Promise<void>' is not assignable to parameter of type 'UnknownAction'.
     dispatch(cancelItem());
   };
 
@@ -66,7 +70,7 @@ export const ToDoItemList = () => {
 
   return (
     <div className="to-do-item-list">
-      {items.map((item) => (
+      {items.map((item: ToDoItemProps) => (
         <ToDoItem
           key={`to-do-item-${item.id}`}
           {...item}

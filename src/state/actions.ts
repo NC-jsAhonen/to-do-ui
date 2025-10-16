@@ -1,38 +1,40 @@
 // actions.ts
 import { Dispatch } from "redux";
 import api from "../api/api-instance";
-import { ToDoItemProps } from "../components/ToDoItem";
-import { store } from "./store";
-
-// Action types
-export const ADD_ITEM = "ADD_ITEM";
-export const EMPTY_NEW_ITEM = "EMPTY_NEW_ITEM";
-export const START_EDITING_ITEM = "START_EDITING_ITEM";
-export const EDIT_ITEM = "EDIT_ITEM";
-export const SET_ITEMS = "SET_ITEMS";
+import { ToDoItemProps } from "../types";
+import { 
+  store, 
+  AddItemAction,
+  EmptyNewItemAction,
+  StartEditingItemAction,
+  EditItemAction,
+  SetItemsAction,
+  ADD_ITEM,
+  EMPTY_NEW_ITEM,
+  START_EDITING_ITEM,
+  EDIT_ITEM,
+  SET_ITEMS
+} from "./store";
 
 // Synchronous Action Creators
-export const addItem = () => ({ type: ADD_ITEM });
+export const addItem = (): AddItemAction => ({ type: ADD_ITEM });
 
-export const cancelItem = () => ({ type: EMPTY_NEW_ITEM });
+export const cancelItem = (): EmptyNewItemAction => ({ type: EMPTY_NEW_ITEM });
 
-export const startEditingItem = (targetItemId: number) => ({
+export const startEditingItem = (targetItemId: number): StartEditingItemAction => ({
   type: START_EDITING_ITEM,
   targetItemId,
 });
 
-export const editItem = (payload: string, targetItemId?: number) => ({
+export const editItem = (payload: string, targetItemId?: number): EditItemAction => ({
   type: EDIT_ITEM,
   payload,
   targetItemId,
 });
 
 // Asynchronous Action Creators
-
 export const fetchItems = () => {
-  return async (
-    dispatch: Dispatch
-  ) => {
+  return async (dispatch: Dispatch<SetItemsAction>) => {
     try {
       const response = await api({
         method: "GET",
@@ -40,17 +42,23 @@ export const fetchItems = () => {
       });
       const items: ToDoItemProps[] = response?.data?.items || [];
       dispatch({ type: SET_ITEMS, payload: items });
-    } catch (error: any) {
-      if (error?.response?.data?.detail === "No List matches the given query.") {
-        await api({
-          method: "POST",
-          url: "/lists/",
-        }).then((response) => {
-          const items: ToDoItemProps[] = response?.data?.items || [];
-          dispatch({ type: SET_ITEMS, payload: items });
-        }).catch((error) => {
-          console.error("Automatic list creation failed: ", error);
-        });
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const responseError = error as { response?: { data?: { detail?: string } } };
+        if (responseError?.response?.data?.detail === "No List matches the given query.") {
+          try {
+            const response = await api({
+              method: "POST",
+              url: "/lists/",
+            });
+            const items: ToDoItemProps[] = response?.data?.items || [];
+            dispatch({ type: SET_ITEMS, payload: items });
+          } catch (createError) {
+            console.error("Automatic list creation failed: ", createError);
+          }
+        } else {
+          console.error("Failed to fetch items: ", error);
+        }
       } else {
         console.error("Failed to fetch items: ", error);
       }
@@ -59,11 +67,8 @@ export const fetchItems = () => {
 };
 
 // Create item from state.newItem with a POST request to the backend
-
 export const createItem = () => {
-  return async (
-    dispatch: Dispatch,
-  ) => {
+  return async (dispatch: Dispatch<SetItemsAction | EmptyNewItemAction>) => {
     const state = store.getState();
     if (!state.newItem) return;
 
@@ -87,9 +92,7 @@ export const createItem = () => {
 };
 
 export const updateItem = (id: number) => {
-  return async (
-    dispatch: Dispatch,
-  ) => {
+  return async (dispatch: Dispatch<SetItemsAction>) => {
     const state = store.getState();
     const itemToUpdate = state.items.find((item) => item.id === id);
     if (!itemToUpdate) return;
@@ -115,9 +118,7 @@ export const updateItem = (id: number) => {
 };
 
 export const deleteItem = (id: number) => {
-  return async (
-    dispatch: Dispatch,
-  ) => {
+  return async (dispatch: Dispatch<SetItemsAction>) => {
     try {
       await api({
         method: "DELETE",
@@ -133,9 +134,7 @@ export const deleteItem = (id: number) => {
 };
 
 export const toggleItemDone = (id: number) => {
-  return async (
-    dispatch: Dispatch,
-  ) => {
+  return async (dispatch: Dispatch<SetItemsAction>) => {
     try {
       const response = await api({
         method: "PATCH",

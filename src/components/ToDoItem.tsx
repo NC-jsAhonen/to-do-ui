@@ -1,13 +1,9 @@
-import { ChangeEvent } from "react";
 import { EditItemButton } from "./EditItemButton";
 import DeleteIcon from "/delete-bin-line.svg";
+import { NewToDoItemProps, ToDoItemProps } from "../types";
 
-export type ToDoItemProps = {
-  id?: number;
-  done?: boolean;
-  text: string;
-  isEditing?: boolean;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+type ToDoItemComponentProps = (ToDoItemProps | NewToDoItemProps) & {
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCreate?: () => void;
   onCancel?: () => void;
   onStartEditing?: () => void;
@@ -15,6 +11,7 @@ export type ToDoItemProps = {
   onDelete?: () => void;
   onToggle?: () => void;
 };
+
 export const ToDoItem = ({
   done = false,
   text,
@@ -26,7 +23,7 @@ export const ToDoItem = ({
   onSave,
   onDelete,
   onToggle,
-}: ToDoItemProps) => {
+}: ToDoItemComponentProps) => {
   return isEditing ? (
     <div className="list-item">
       <input value={text} onChange={onChange} />

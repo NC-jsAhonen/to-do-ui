@@ -1,20 +1,51 @@
 import { applyMiddleware, createStore } from "redux";
-import { ToDoItemProps } from "../components/ToDoItem";
+import { NewToDoItemProps, ToDoItemProps } from "../types";
 import { thunk } from "redux-thunk";
 
 export type State = {
   items: ToDoItemProps[];
-  newItem: ToDoItemProps | null;
+  newItem: NewToDoItemProps | null;
 };
 
-type EditItemPayload = string;
-type SetItemsPayload = ToDoItemProps[];
+// Action type constants
+export const ADD_ITEM = "ADD_ITEM" as const;
+export const EMPTY_NEW_ITEM = "EMPTY_NEW_ITEM" as const;
+export const START_EDITING_ITEM = "START_EDITING_ITEM" as const;
+export const EDIT_ITEM = "EDIT_ITEM" as const;
+export const SET_ITEMS = "SET_ITEMS" as const;
 
-type Action = {
-  type: string;
-  payload?: EditItemPayload | SetItemsPayload;
-  targetItemId?: number;
-};
+// Action interfaces
+export interface AddItemAction {
+  type: typeof ADD_ITEM;
+}
+
+export interface EmptyNewItemAction {
+  type: typeof EMPTY_NEW_ITEM;
+}
+
+export interface StartEditingItemAction {
+  type: typeof START_EDITING_ITEM;
+  targetItemId: number;
+}
+
+export interface EditItemAction {
+  type: typeof EDIT_ITEM;
+  payload: string;
+  targetItemId?: number; // Optional because it can edit new item or existing item
+}
+
+export interface SetItemsAction {
+  type: typeof SET_ITEMS;
+  payload: ToDoItemProps[];
+}
+
+// Union type for all actions
+export type ToDoListAction =
+  | AddItemAction
+  | EmptyNewItemAction
+  | StartEditingItemAction
+  | EditItemAction
+  | SetItemsAction;
 
 const defaultState: State = {
   items: [],
@@ -23,12 +54,12 @@ const defaultState: State = {
 
 export const toDoListReducer = (
   state: State = defaultState,
-  action: Action
+  action: ToDoListAction
 ): State => {
   switch (action.type) {
     case "ADD_ITEM":
       if (state && !state?.newItem) {
-        return { ...state, newItem: { text: "", isEditing: true } };
+        return { ...state, newItem: { done: false, text: "", isEditing: true } };
       }
       return state;
     case "EMPTY_NEW_ITEM":
@@ -77,8 +108,9 @@ export const toDoListReducer = (
         }
 
         // Edit new item
-        const newItem: ToDoItemProps = {
-          ...state.newItem,
+        const newItem: NewToDoItemProps = {
+          done: state.newItem?.done ?? false,
+          isEditing: state.newItem?.isEditing ?? true,
           text: payload,
         };
         return {
